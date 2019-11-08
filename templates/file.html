@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./static/css/app.css">
+    <link rel="stylesheet" href="./static/css/style.css">
+</head>
+<body>
+    <div class="Header">
+            <div class="Header-container">
+                <div class="Header-content">
+                    <div class="Header-logo">
+                        <Link to="/" >
+                            <img src="http://www.inguat.gob.gt/templates/home/img/logo-guatemala-inguat.jpg" alt=""/>
+                        </Link>
+                    </div>
+                    <div class="Header-nav">
+                        <div class="Nav">
+                            <ul>
+                                <li>
+                                    <a href="http://localhost:8080"> << Regresar </a> 
+                                </li>
+                                <li>
+                                    <a href="/datasets"> Ver Datasets  </a> 
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="Header-fbLogin" >
+    <h2>Datasets</h2>
+    </div>
+    <div class="Header-data">
+    {% for item in tree.children recursive %}
+        <div class="Header">
+            
+            <li> <a href="/{{ item.name }}">{{ item.name }}</a> </li>
+            {% if item.children %}
+                <ul>
+                    <li>
+                        {{ loop(item.children) }}
+                    </li>
+                </ul>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+</body>
+</html>

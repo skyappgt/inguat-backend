@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/app.css">
+    
+    <title>Plot</title>
+</head>
+<body>
+    <div class="Header">
+        <div class="Header-container">
+            <div class="Header-content">
+                <div class="Header-logo">
+                    <Link to="/" >
+                        <img src="http://www.inguat.gob.gt/templates/home/img/logo-guatemala-inguat.jpg" alt=""/>
+                    </Link>
+                </div>
+                <div class="Header">
+                    <ul>
+                        <li>
+                            <a href="http://localhost:8080"> << Regresar </a> 
+                        </li>
+                        
+                    </ul>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        
+    <div class="Header-plot" style="text-align: center;width: 100%;height: auto;" >
+        <img src="data:image/png;base64, {{ plot_url }}" alt="my plot"
+        style="text-align: center;width: 80%;height: auto;"></div>    
+    </div> 
+    <div class="Footer">
+        <div class="Footer-container">
+            <div class="Footer-content">
+                <div className="Footer-logo">
+                    Otto Romeo Catalán Arreaga @ 2019
+                </div>
+                <div className="Footer-social">
+                    Machine Learning Turismo Interno
+                </div>
+            </div> 
+        </div>
+    </div>
+        
+</body>
+</html>
