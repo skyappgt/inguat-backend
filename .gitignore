@@ -61,6 +61,6 @@ typings/
 .next
 
 .ipynb_checkpoints
-data/
-model/
-ipynb/
+data/DWeb/inguat-backend/data/
+data/DWeb/inguat-backend/model/
+data/DWeb/inguat-backend/ipynb/
