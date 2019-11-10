@@ -5,7 +5,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+<<<<<<< HEAD
 # Runtime dataskua
+=======
+# Runtime data
+>>>>>>> 337abb15d4967d64ce6ba596f7958ecc65f5a8c8
 pids
 *.pid
 *.seed
