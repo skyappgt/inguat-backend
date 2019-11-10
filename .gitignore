@@ -6,7 +6,11 @@ yarn-debug.log*
 yarn-error.log*
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Runtime dataskua
+=======
+# Runtime data
+>>>>>>> 337abb15d4967d64ce6ba596f7958ecc65f5a8c8
 =======
 # Runtime data
 >>>>>>> 337abb15d4967d64ce6ba596f7958ecc65f5a8c8
@@ -63,9 +67,12 @@ typings/
 
 # next.js build output
 .next
+<<<<<<< HEAD
 
 .ipynb_checkpoints
 
 data/
 model/
 ipynb/
+=======
+>>>>>>> 337abb15d4967d64ce6ba596f7958ecc65f5a8c8
