@@ -51,6 +51,7 @@ import io, base64, json
 from werkzeug.local import LocalProxy
 from collections import Counter
 from joblib import dump, load
+from datetime import datetime
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv', 'png', 'jpg', 'jpeg', 'gif'])
 UPLOAD_FOLDER = '/data/DWeb/inguat-backend/data'
@@ -94,10 +95,10 @@ def predict():
         df = pd.read_csv(urldata, index_col=0)
         clf = joblib.load('model/' + model) 
         new_predict = prediction(clf, df)
-       
+        img_pred = chart_prediction(new_predict)
         #encoding y definitions
         
-        resp = jsonify(new_predict)
+        resp = jsonify(new_predict, img_pred)
         resp.status_code = 201
         return resp
     else:
@@ -117,8 +118,32 @@ def prediction(clf, df):
     #label prediction
     labels_pred = le.inverse_transform(pred_df)
     pred_df = pd.Series(labels_pred)
-    pred_model = Counter(','.join(pred_df).replace(' ', '').split(',')).most_common(5)    
+    pred_model = Counter(','.join(pred_df).replace('dest', 'count').split(',')).most_common(5)    
     return pred_model
+
+def chart_prediction(X):
+    df = pd.Series(X)
+    
+    #plot=df.apply(pd.value_counts).plot.pie(subplots=True)
+    #plot = df.value_counts().plot(kind=pie, figsize=(5, 5))
+    values = df.value_counts().values
+    labels = df.value_counts().index
+    
+    plt.figure(figsize=(9,4))
+    plt.pie(values, labels=labels, startangle=15, shadow = True, autopct=lambda p: '{:.2f}%({:.0f})'.format(p,(p/100)*values.sum()))
+    plt.title('TOP Pronóstico de Destinos')
+
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    pngfig = base64.b64encode(img.getvalue()).decode('ascii')
+    img_name = datetime.now().strftime("%Y-%m-%d-%H:%M")
+    with open("/data/DWeb/inguat-backend/charts/prediction/predict"+img_name+ ".png", "wb") as fh:
+        fh.write(base64.decodebytes(pngfig.encode()))
+    #pngfig.save(os.path.join('', img_name))
+    return pngfig #render_template('plot.html', plot_url=pngfig)
+
+
 
 @app.route('/models', methods=['GET'])
 def models():
@@ -180,6 +205,7 @@ def save():
                  n_iter_no_change=5, class_weight=None, warm_start=False)
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
         
     if algoritmo == 'RF':
         clf = RandomForestClassifier(n_estimators=200, criterion='gini', max_depth=None, min_samples_split=2, 
@@ -189,30 +215,35 @@ def save():
                             warm_start=True, class_weight=None) 
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
 
     if algoritmo == 'KNN':
         clf = KNeighborsClassifier(n_neighbors=180, weights='distance', algorithm='auto', leaf_size=60, p=1, 
                            metric='minkowski', metric_params=None, n_jobs=None)
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
-    
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
+
     if algoritmo == 'SVC':
         clf = SVC(C=2.0, cache_size=200, class_weight=None, coef0=40.0, decision_function_shape='ovo', degree=3, gamma=0.020, 
                     kernel='poly',max_iter=-1, probability=True, random_state=12, shrinking=True,tol=0.00001, verbose=False)    
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
 
     if algoritmo == 'MLP':
         clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(15,), random_state=1)
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
     
     if algoritmo == 'SVR':
         clf = SVR(kernel='rbf', degree=3, gamma='auto_deprecated', coef0=0.0, tol=0.001, C=1.0, epsilon=0.1, shrinking=True, cache_size=200, verbose=False, max_iter=-1)
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
     
-    resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved )
+    resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved, img )
     resp.status_code = 200
     return resp 
 
@@ -221,6 +252,26 @@ def saving(algoritmo, clf):
     joblib.dump(clf, 'model/' + model)
     
     return model
+
+def chart(X, clf, X_test, y_test, algoritmo):
+    y_pred = clf.predict(X)
+    x_axis = X_test.EDAD
+    plt.figure(figsize=(9,4))
+    plt.scatter(x_axis, y_test, c = 'b', alpha = 0.9, marker = 'o')
+    plt.scatter(x_axis, y_pred, c = 'r', alpha = 0.9, marker = 'o', label = 'Pronostico')
+    plt.grid(color = '#D3D3D3', linestyle = 'solid')
+    plt.legend(loc = 'middle right', fontsize=10, fancybox=True, shadow=True)
+    
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    pngfig = base64.b64encode(img.getvalue()).decode('ascii')
+    img_name = algoritmo + datetime.now().strftime("%Y-%m-%d-%H:%M")
+    with open("/data/DWeb/inguat-backend/charts/"+ img_name+ ".png", "wb") as fh:
+        fh.write(base64.decodebytes(pngfig.encode()))
+    #pngfig.save(os.path.join('', img_name))
+    return pngfig #render_template('plot.html', plot_url=pngfig)
+
 
 @app.route('/train', methods=['POST'])
 def train():
@@ -413,6 +464,24 @@ def make_tree(path):
                 with open(fn) as f:
                     contents = f.read()
                 tree['children'].append(dict(name=name))
+    return tree
+
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    chartpath= os.path.expanduser('/data/DWeb/inguat-backend/charts')
+    resp = jsonify(make_tree_charts(chartpath))
+    return resp
+
+def make_tree_charts(path):
+    tree = []
+    name=os.path.basename(path)
+    try: lst = os.listdir(path)
+    except OSError:
+        pass #ignore errors
+    else:
+        for name in lst:
+            fn = os.path.join(path, name)
+            tree.append(name)
     return tree
 
 @app.route('/data_train', methods=['GET'])
