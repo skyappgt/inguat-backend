@@ -29,6 +29,7 @@ clyent==1.2.2
 colorama==0.4.1
 conda==4.8.3
 conda-build==3.17.6
+conda-package-handling==1.6.0
 conda-verify==3.1.1
 contextlib2==0.5.5
 cryptography==2.8
@@ -147,6 +148,7 @@ pynndescent==0.3.0
 pyodbc==4.0.25
 pyOpenSSL==19.1.0
 pyparsing==2.3.0
+PyQt5==5.9.2
 pyqtgraph==0.10.0
 pyrsistent==0.15.7
 PySocks==1.7.1
@@ -177,10 +179,12 @@ Send2Trash==1.5.0
 serverfiles==0.3.0
 simplegeneric==0.8.1
 singledispatch==3.4.0.3
+sip==4.19.8
 six==1.14.0
 snowballstemmer==1.2.1
 sortedcollections==1.0.1
 sortedcontainers==2.1.0
+soupsieve==1.9.4
 Sphinx==1.8.2
 sphinxcontrib-websupport==1.1.0
 spyder==3.3.2
