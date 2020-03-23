@@ -530,4 +530,4 @@ def create_figure():
 if __name__ == '__main__':
  app.run(debug=True)
 
-flask_cors.CORS(app, expose_headers='Authorization')
+CORS(app, expose_headers='Authorization')
