@@ -445,13 +445,16 @@ def load_dataset(filename):
     x = df.head() 
     return render_template("dataframe.html", name=filename, data=x)
 
+#FIXED FOR FRONTEND--------------------------------------
 @app.route('/datasets', methods=['GET'])
 def datasets():
     path = os.path.expanduser(UPLOAD_FOLDER)
-    return render_template('file.html', tree=make_tree(path))
+    # return render_template('file.html', tree=make_tree(path))
+    tree = make_tree(path)
+    return jsonify(tree)
 
 def make_tree(path):
-    tree = dict(name=os.path.basename(path), children=[])
+    tree = dict(path=os.path.basename(path), base=[])
     try: lst = os.listdir(path)
     except OSError:
         pass #ignore errors
@@ -459,11 +462,11 @@ def make_tree(path):
         for name in lst:
             fn = os.path.join(path, name)
             if os.path.isdir(fn):
-                tree['children'].append(make_tree(fn))
+                tree['base'].append(make_tree(fn))
             else:
                 with open(fn) as f:
                     contents = f.read()
-                tree['children'].append(dict(name=name))
+                tree['base'].append(dict(name=name))
     return tree
 
 @app.route('/dashboard', methods=['GET'])
