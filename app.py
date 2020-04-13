@@ -54,7 +54,7 @@ from joblib import dump, load
 from datetime import datetime
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv', 'png', 'jpg', 'jpeg', 'gif'])
-UPLOAD_FOLDER = '/app/updata'
+UPLOAD_FOLDER = '/app/data'
 
 app = Flask(__name__)
 CORS(app)
@@ -428,7 +428,7 @@ def upload_file():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         resp = jsonify({'message' : 'File cargada exitosamente'})
         resp.status_code = 201
-        df = pd.read_csv('/app/updata/'+filename, index_col=0)
+        df = pd.read_csv('/app/data/'+filename, index_col=0)
         #x = df 
         #return render_template("dataframe.html", name=filename, data=x)        
         return redirect('http://localhost:8080/train')
