@@ -52,6 +52,7 @@ from werkzeug.local import LocalProxy
 from collections import Counter
 from joblib import dump, load
 from datetime import datetime
+from sqlalchemy import create_engine
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv', 'png', 'jpg', 'jpeg', 'gif'])
 UPLOAD_FOLDER = '/app/data'
@@ -410,6 +411,7 @@ class EncoderXY:
     def fit_transform(self, X, y=None):
         return self.fit(X, y).transform(X)
 
+#---------------------------------CARGA de ARCIHIVOS-----------------
 @app.route('/carga_datos', methods= ['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -428,15 +430,24 @@ def upload_file():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         resp = jsonify({'message' : 'File cargada exitosamente'})
         resp.status_code = 201
-        df = pd.read_csv('/app/data/'+filename, index_col=0)
+        #df = pd.read_csv('/app/data/'+filename, index_col=0)
         #x = df 
         #return render_template("dataframe.html", name=filename, data=x)        
+        engine = create_engine('postgres://uwdzpuueaptugh:2b15054460b2c7b888fbe8fe213d685ba9384d4f013a58a4594b59b159c156e2@ec2-23-20-129-146.compute-1.amazonaws.com:5432/d75jsucusvnsh1')
+        for df in pd.read_csv(filename, names=columns,chunksize=1000):
+            df.to_sql(
+                'inguat_isnull', 
+                engine,
+                index=False,
+                if_exists='append' # if the table already exists, append this data
+            )
         return redirect('http://localhost:8080/train')
     else:
         resp = jsonify({'message' : 'Extensiones permitidas txt, pdf, png, jpg, jpeg, gif'})
         resp.status_code = 400
         return resp
 
+###########---DESPLIEGUE de DATASETS
 @app.route('/<filename>', methods=['GET'])
 def load_dataset(filename):
     filename = request.view_args['filename']
@@ -444,6 +455,17 @@ def load_dataset(filename):
     df = pd.read_csv('data/'+filename, index_col=0)
     x = df.head() 
     return render_template("dataframe.html", name=filename, data=x)
+
+#*****************psql
+@app.route('/upload', methods=['GET'])
+def upload():
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        resp = jsonify({'message' : 'File cargada exitosamente'})
+        resp.status_code = 201
+    
+    
 
 #FIXED FOR FRONTEND--------------------------------------
 @app.route('/datasets', methods=['GET'])
