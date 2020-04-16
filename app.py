@@ -148,7 +148,7 @@ def chart_prediction(X):
 
 @app.route('/models', methods=['GET'])
 def models():
-    path = os.path.expanduser('/data/DWeb/inguat-backend/model')
+    path = os.path.expanduser('/app/data/nueva')
     resp = jsonify(make_tree_model(path))
     return resp
 
@@ -177,7 +177,7 @@ def save():
     nsplit = int(data['split'])/100
     
     # train split data
-    urldata = 'data/'+ str(data['dataset'])
+    urldata = 'app/data/'+ str(data['dataset'])
     df = pd.read_csv(urldata, index_col=0)
     EncodLabel = EncoderXY()
     X_le = EncodLabel.fit_transform(df)  # codificando todo el dataset
@@ -285,7 +285,7 @@ def train():
     nsplit = int(data['split'])/100
     
     # train split data
-    urldata = 'data/'+ str(data['dataset'])
+    urldata = 'app/data/'+ str(data['dataset'])
     df = pd.read_csv(urldata, index_col=0)
     EncodLabel = EncoderXY()
     X_le = EncodLabel.fit_transform(df)  # codificando todo el dataset
@@ -384,7 +384,7 @@ def decode(df, y_pred):
 
 
 
-#********************Encoder
+#********************Encoder CLASS---------------------------------------------------
 class EncoderXY:
     def __init__(self, columns = None ):
         self.columns = columns    # lista de columnas a codificar
@@ -441,7 +441,8 @@ def upload_file():
         #         index=False,
         #         if_exists='append' # if the table already exists, append this data
         #     )
-        return redirect('http://localhost:8080/train')
+        #return redirect('http://localhost:8080/train')
+        return resp
     else:
         resp = jsonify({'message' : 'Extensiones permitidas txt, pdf, png, jpg, jpeg, gif'})
         resp.status_code = 400
