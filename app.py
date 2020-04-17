@@ -145,26 +145,6 @@ def chart_prediction(X):
     return pngfig #render_template('plot.html', plot_url=pngfig)
 
 
-
-@app.route('/models', methods=['GET'])
-def models():
-    path = os.path.expanduser('/app/data/nueva')
-    resp = jsonify(make_tree_model(path))
-    return resp
-
-def make_tree_model(path):
-    tree = []
-    name=os.path.basename(path)
-    try: lst = os.listdir(path)
-    except OSError:
-        pass #ignore errors
-    else:
-        for name in lst:
-            fn = os.path.join(path, name)
-            tree.append(name)
-    return tree
-
-
 @app.route('/save', methods=['POST'])
 def save():
     #obteniendo la data del form
@@ -381,9 +361,6 @@ def decode(df, y_pred):
   
     return data
     
-
-
-
 #********************Encoder CLASS---------------------------------------------------
 class EncoderXY:
     def __init__(self, columns = None ):
@@ -410,6 +387,25 @@ class EncoderXY:
 
     def fit_transform(self, X, y=None):
         return self.fit(X, y).transform(X)
+
+#*********************MODELS+++++++++++++++++++++++++++++
+@app.route('/models', methods=['GET'])
+def models():
+    path = os.path.expanduser('/app/data/models')
+    resp = jsonify(make_tree_model(path))
+    return resp
+
+def make_tree_model(path):
+    tree = []
+    name=os.path.basename(path)
+    try: lst = os.listdir(path)
+    except OSError:
+        pass #ignore errors
+    else:
+        for name in lst:
+            fn = os.path.join(path, name)
+            tree.append(name)
+    return tree
 
 #---------------------------------CARGA de ARCIHIVOS-----------------
 @app.route('/carga_datos', methods= ['POST'])
