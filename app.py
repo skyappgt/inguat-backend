@@ -391,7 +391,7 @@ class EncoderXY:
 #*********************MODELS+++++++++++++++++++++++++++++
 @app.route('/models', methods=['GET'])
 def models():
-    path = os.path.expanduser('/app/data/models')
+    path = os.path.expanduser('/app/models')
     resp = jsonify(make_tree_model(path))
     return resp
 
