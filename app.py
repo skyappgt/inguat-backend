@@ -451,7 +451,8 @@ def load_dataset(filename):
     
     df = pd.read_csv('data/'+filename, index_col=0)
     x = df.head() 
-    return render_template("dataframe.html", name=filename, data=x)
+    # return render_template("dataframe.html", name=filename, data=x)
+    return x.to_json()
 
 #*****************psql
 @app.route('/upload', methods=['GET'])
