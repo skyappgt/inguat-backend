@@ -453,7 +453,7 @@ def load_dataset(filename):
     x = df.head() 
     # return render_template("dataframe.html", name=filename, data=x)
     # x = x.to_dict(orient='records')
-    return x.to_json(orient='records')
+    return x.to_json()
 
 #*****************psql
 @app.route('/upload', methods=['GET'])
