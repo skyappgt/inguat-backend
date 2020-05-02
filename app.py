@@ -55,7 +55,7 @@ from datetime import datetime
 from sqlalchemy import create_engine
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv', 'png', 'jpg', 'jpeg', 'gif'])
-UPLOAD_FOLDER = 'data'
+UPLOAD_FOLDER = 'data/'
 
 app = Flask(__name__)
 CORS(app)
@@ -426,7 +426,7 @@ def upload_file():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         resp = jsonify({'message' : 'File cargada exitosamente'})
         resp.status_code = 201
-        df = pd.read_csv('/data/'+filename, index_col=0)
+        df = pd.read_csv(UPLOAD_FOLDER+filename, index_col=0)
         #x = df 
         #return render_template("dataframe.html", name=filename, data=x)        
         # engine = create_engine('postgres://uwdzpuueaptugh:2b15054460b2c7b888fbe8fe213d685ba9384d4f013a58a4594b59b159c156e2@ec2-23-20-129-146.compute-1.amazonaws.com:5432/d75jsucusvnsh1')
@@ -449,7 +449,7 @@ def upload_file():
 def load_dataset(filename):
     filename = request.view_args['filename']
     
-    df = pd.read_csv('data/'+filename, index_col=0)
+    df = pd.read_csv(UPLOAD_FOLDER+filename, index_col=0)
     x = df.head() 
     # return render_template("dataframe.html", name=filename, data=x)
     # x = x.to_dict(orient='records')
