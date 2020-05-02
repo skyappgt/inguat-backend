@@ -55,7 +55,7 @@ from datetime import datetime
 from sqlalchemy import create_engine
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv', 'png', 'jpg', 'jpeg', 'gif'])
-UPLOAD_FOLDER = '/app/data'
+UPLOAD_FOLDER = '/data'
 
 app = Flask(__name__)
 CORS(app)
@@ -157,7 +157,7 @@ def save():
     nsplit = int(data['split'])/100
     
     # train split data
-    urldata = 'app/data/'+ str(data['dataset'])
+    urldata = 'data/'+ str(data['dataset'])
     df = pd.read_csv(urldata, index_col=0)
     EncodLabel = EncoderXY()
     X_le = EncodLabel.fit_transform(df)  # codificando todo el dataset
@@ -248,7 +248,7 @@ def chart(X, clf, X_test, y_test, algoritmo):
     img.seek(0)
     pngfig = base64.b64encode(img.getvalue()).decode('ascii')
     img_name = algoritmo + datetime.now().strftime("%Y-%m-%d-%H:%M")
-    with open("/data/DWeb/inguat-backend/charts/"+ img_name+ ".png", "wb") as fh:
+    with open("/charts/"+ img_name+ ".png", "wb") as fh:
         fh.write(base64.decodebytes(pngfig.encode()))
     #pngfig.save(os.path.join('', img_name))
     return pngfig #render_template('plot.html', plot_url=pngfig)
@@ -265,7 +265,7 @@ def train():
     nsplit = int(data['split'])/100
     
     # train split data
-    urldata = 'app/data/'+ str(data['dataset'])
+    urldata = 'data/'+ str(data['dataset'])
     df = pd.read_csv(urldata, index_col=0)
     EncodLabel = EncoderXY()
     X_le = EncodLabel.fit_transform(df)  # codificando todo el dataset
@@ -391,7 +391,7 @@ class EncoderXY:
 #*********************MODELS+++++++++++++++++++++++++++++
 @app.route('/models', methods=['GET'])
 def models():
-    path = os.path.expanduser('/app/model')
+    path = os.path.expanduser('/model')
     resp = jsonify(make_tree_model(path))
     return resp
 
@@ -407,7 +407,7 @@ def make_tree_model(path):
             tree.append(name)
     return tree
 
-#---------------------------------CARGA de ARCIHIVOS-----------------
+#---------------------------------CARGA de ARCHIVOS-----------------
 @app.route('/carga_datos', methods= ['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -426,7 +426,7 @@ def upload_file():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         resp = jsonify({'message' : 'File cargada exitosamente'})
         resp.status_code = 201
-        df = pd.read_csv('/app/data/'+filename, index_col=0)
+        df = pd.read_csv('/data/'+filename, index_col=0)
         #x = df 
         #return render_template("dataframe.html", name=filename, data=x)        
         # engine = create_engine('postgres://uwdzpuueaptugh:2b15054460b2c7b888fbe8fe213d685ba9384d4f013a58a4594b59b159c156e2@ec2-23-20-129-146.compute-1.amazonaws.com:5432/d75jsucusvnsh1')
@@ -492,7 +492,7 @@ def make_tree(path):
 
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
-    chartpath= os.path.expanduser('/data/DWeb/inguat-backend/charts')
+    chartpath= os.path.expanduser('/charts')
     resp = jsonify(make_tree_charts(chartpath))
     return resp
 
