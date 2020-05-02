@@ -55,7 +55,7 @@ from datetime import datetime
 from sqlalchemy import create_engine
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv', 'png', 'jpg', 'jpeg', 'gif'])
-UPLOAD_FOLDER = '/data'
+UPLOAD_FOLDER = 'data'
 
 app = Flask(__name__)
 CORS(app)
