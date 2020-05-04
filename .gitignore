@@ -72,7 +72,6 @@ typings/
 .ipynb_checkpoints
 
 data/
-model/
 ipynb/
 charts/
 =======
