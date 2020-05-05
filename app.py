@@ -47,7 +47,8 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
 import logging, os, datetime, subprocess
 import urllib.request
-import io, base64, json, requests
+import io, base64, json
+
 from werkzeug.local import LocalProxy
 from collections import Counter
 from joblib import dump, load
