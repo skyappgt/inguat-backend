@@ -42,12 +42,12 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
 from sklearn import metrics 
 
-from flask import Flask, Response, render_template, flash, request, redirect, url_for, session, jsonify
+from flask import Flask, Response, render_template, flash, request, redirect, url_for, session, jsonify, send_file, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
 import logging, os, datetime, subprocess
 import urllib.request
-import io, base64, json
+import io, base64, json, requests
 from werkzeug.local import LocalProxy
 from collections import Counter
 from joblib import dump, load
@@ -154,10 +154,10 @@ def save():
     #label prediction
     algoritmo = data['alg']
     split = data['split']
-    nsplit = int(data['split'])/100
+    nsplit = int(split)/100
     
     # train split data
-    urldata = 'data/'+ str(data['dataset'])
+    urldata = 'data/'+ dataset
     df = pd.read_csv(urldata, index_col=0)
     EncodLabel = EncoderXY()
     X_le = EncodLabel.fit_transform(df)  # codificando todo el dataset
@@ -186,7 +186,7 @@ def save():
                  n_iter_no_change=5, class_weight=None, warm_start=False)
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
-        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
+        # img= chart(X_test_std, clf, X_test, y_test, algoritmo)
         
     if algoritmo == 'RF':
         clf = RandomForestClassifier(n_estimators=200, criterion='gini', max_depth=None, min_samples_split=2, 
@@ -224,9 +224,14 @@ def save():
         model_saved = saving(algoritmo, clf)
         img= chart(X_test_std, clf, X_test, y_test, algoritmo)
     
-    resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved, img )
-    resp.status_code = 200
-    return resp 
+    # resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved )
+    # resp.status_code = 200
+    # return resp 
+    path= 'model/'+model_saved
+    try:
+        return send_file( path, as_attachment=True, mimetype='binary')
+    except Exception as e:
+	                    return str(e)
 
 def saving(algoritmo, clf):
     model =  algoritmo + '_model.joblib'
@@ -248,7 +253,7 @@ def chart(X, clf, X_test, y_test, algoritmo):
     img.seek(0)
     pngfig = base64.b64encode(img.getvalue()).decode('ascii')
     img_name = algoritmo + datetime.now().strftime("%Y-%m-%d-%H:%M")
-    with open("/charts/"+ img_name+ ".png", "wb") as fh:
+    with open("charts/"+ img_name+ ".png", "wb") as fh:
         fh.write(base64.decodebytes(pngfig.encode()))
     #pngfig.save(os.path.join('', img_name))
     return pngfig #render_template('plot.html', plot_url=pngfig)
