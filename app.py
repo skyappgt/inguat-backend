@@ -227,7 +227,7 @@ def save():
     
     # resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved )
     # resp.status_code = 200
-    return redirect('https://api-inguat.herokuapp.com/download/'+modelsaved)
+    return redirect('https://api-inguat.herokuapp.com/download/'+model_saved)
     
 
 def saving(algoritmo, clf):
