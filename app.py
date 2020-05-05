@@ -225,8 +225,8 @@ def save():
         model_saved = saving(algoritmo, clf)
         img= chart(X_test_std, clf, X_test, y_test, algoritmo)
     
-    # resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved )
-    # resp.status_code = 200
+    resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved )
+    resp.status_code = 200
     return redirect('https://api-inguat.herokuapp.com/download/'+model_saved)
     
 
