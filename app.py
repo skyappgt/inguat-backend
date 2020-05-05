@@ -227,17 +227,12 @@ def save():
     
     # resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved )
     # resp.status_code = 200
-    # return resp 
-    path= 'model/'+model_saved
-    try:
-        return send_file( path, as_attachment=True, mimetype='binary')
-    except Exception as e:
-	                    return str(e)
+    return redirect('https://api-inguat.herokuapp.com/download/'+modelsaved)
+    
 
 def saving(algoritmo, clf):
     model =  algoritmo + '_model.joblib'
     joblib.dump(clf, 'model/' + model)
-    
     return model
 
 def chart(X, clf, X_test, y_test, algoritmo):
@@ -258,6 +253,17 @@ def chart(X, clf, X_test, y_test, algoritmo):
         fh.write(base64.decodebytes(pngfig.encode()))
     #pngfig.save(os.path.join('', img_name))
     return pngfig #render_template('plot.html', plot_url=pngfig)
+
+@app.route('/download/<path:filename>', methods=['GET'])
+def download(filename):
+    path = 'model/'+filename
+    
+    return send_file(path, as_attachment=True)
+
+    # try:
+    #     return send_file( path, as_attachment=True, mimetype='binary')
+    # except Exception as e:
+	#                     return str(e)
 
 
 @app.route('/train', methods=['POST'])
