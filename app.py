@@ -227,8 +227,8 @@ def save():
     
     resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved )
     resp.status_code = 200
-    return redirect('http://api-inguat.herokuapp.com/download/'+model_saved)
-    
+    # return redirect('https://api-inguat.herokuapp.com/download/'+model_saved)
+    return resp
 
 def saving(algoritmo, clf):
     model =  algoritmo + '_model.joblib'
@@ -257,13 +257,11 @@ def chart(X, clf, X_test, y_test, algoritmo):
 @app.route('/download/<path:filename>', methods=['GET'])
 def download(filename):
     path = 'model/'+filename
-    
-    return send_file(path, as_attachment=True)
-
-    # try:
-    #     return send_file( path, as_attachment=True, mimetype='binary')
-    # except Exception as e:
-	#                     return str(e)
+    try:
+        return send_file(path, as_attachment=True)
+    # return send_file( path, as_attachment=True, mimetype='binary')
+    except Exception as e:
+	                    return str(e)
 
 
 @app.route('/train', methods=['POST'])
