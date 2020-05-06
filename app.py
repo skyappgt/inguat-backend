@@ -146,7 +146,7 @@ def chart_prediction(X):
     return pngfig #render_template('plot.html', plot_url=pngfig)
 
 
-@app.route('/save', methods=['POST'])
+@app.route('/download', methods=['POST'])
 def save():
     #obteniendo la data del form
     flag = False
@@ -254,7 +254,7 @@ def chart(X, clf, X_test, y_test, algoritmo):
     #pngfig.save(os.path.join('', img_name))
     return pngfig #render_template('plot.html', plot_url=pngfig)
 
-@app.route('/download/<path:filename>', methods=['GET'])
+@app.route('/apidown/<path:filename>', methods=['GET'])
 def download(filename):
     path = 'model/'+filename
     try:
