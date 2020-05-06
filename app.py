@@ -34,7 +34,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.svm import LinearSVC, SVR
 
-from sklearn.externals import joblib
+import joblib
 
 from sklearn.metrics import r2_score
 from sklearn.metrics import classification_report
@@ -220,7 +220,7 @@ def save():
         # img= chart(X_test_std, clf, X_test, y_test, algoritmo)
     
     if algoritmo == 'SVR':
-        clf = SVR(kernel='rbf', degree=3, gamma='auto_deprecated', coef0=0.0, tol=0.001, C=1.0, epsilon=0.1, shrinking=True, cache_size=200, verbose=False, max_iter=-1)
+        clf = SVR(kernel='rbf', degree=3, gamma='scale', coef0=0.0, tol=0.001, C=1.0, epsilon=0.1, shrinking=True, cache_size=200, verbose=False, max_iter=-1)
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
         # img= chart(X_test_std, clf, X_test, y_test, algoritmo)
