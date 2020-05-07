@@ -151,10 +151,10 @@ def save():
     #obteniendo la data del form
     flag = False
     data = request.get_json(force=True)
-    dataset = data['data'] 
+    dataset = data['dataset'] 
     #label prediction
     algoritmo = data['alg']
-    split = data['spl']
+    split = data['split']
     nsplit = int(split)/100
     
     # train split data
