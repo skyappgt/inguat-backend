@@ -232,7 +232,7 @@ def save():
 
 def saving(algoritmo, clf):
     model =  algoritmo + '_model.joblib'
-    joblib.dump(clf, 'model/' + model)
+    joblib.dump(clf, 'tmp/' + model)
     return model
 
 def chart(X, clf, X_test, y_test, algoritmo):
@@ -256,7 +256,7 @@ def chart(X, clf, X_test, y_test, algoritmo):
 
 @app.route('/apidown/<path:filename>', methods=['GET'])
 def download(filename):
-    path = 'model/'+filename
+    path = 'tmp/'+filename
     try:
         return send_file(path, as_attachment=True)
     # return send_file( path, as_attachment=True, mimetype='binary')
