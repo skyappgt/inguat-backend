@@ -187,7 +187,7 @@ def save():
                  n_iter_no_change=5, class_weight=None, warm_start=False)
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
-        # img= chart(X_test_std, clf, X_test, y_test, algoritmo)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
         
     if algoritmo == 'RF':
         clf = RandomForestClassifier(n_estimators=200, criterion='gini', max_depth=None, min_samples_split=2, 
@@ -197,35 +197,35 @@ def save():
                             warm_start=True, class_weight=None) 
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
-        # img= chart(X_test_std, clf, X_test, y_test, algoritmo)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
 
     if algoritmo == 'KNN':
         clf = KNeighborsClassifier(n_neighbors=180, weights='distance', algorithm='auto', leaf_size=60, p=1, 
                            metric='minkowski', metric_params=None, n_jobs=None)
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
-        # img= chart(X_test_std, clf, X_test, y_test, algoritmo)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
 
     if algoritmo == 'SVC':
         clf = SVC(C=2.0, cache_size=200, class_weight=None, coef0=40.0, decision_function_shape='ovo', degree=3, gamma=0.020, 
                     kernel='poly',max_iter=-1, probability=True, random_state=12, shrinking=True,tol=0.00001, verbose=False)    
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
-        # img= chart(X_test_std, clf, X_test, y_test, algoritmo)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
 
     if algoritmo == 'MLP':
         clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(15,), random_state=1)
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
-        # img= chart(X_test_std, clf, X_test, y_test, algoritmo)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
     
     if algoritmo == 'SVR':
         clf = SVR(kernel='rbf', degree=3, gamma='scale', coef0=0.0, tol=0.001, C=1.0, epsilon=0.1, shrinking=True, cache_size=200, verbose=False, max_iter=-1)
         clf.fit(X_train_std, y_train)
         model_saved = saving(algoritmo, clf)
-        # img= chart(X_test_std, clf, X_test, y_test, algoritmo)
+        img= chart(X_test_std, clf, X_test, y_test, algoritmo)
     
-    resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved )
+    resp = jsonify( xtrain, ytrain, xtest, ytest, dataset, algoritmo, nsplit, model_saved, img )
     resp.status_code = 200
     # return redirect('https://api-inguat.herokuapp.com/download/'+model_saved)
     return resp
