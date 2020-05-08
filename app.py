@@ -95,7 +95,7 @@ def predict():
         
         urldata = 'new/'+ filename
         df = pd.read_csv(urldata, index_col=0)
-        clf = joblib.load('model/' + model) 
+        clf = joblib.load('tmp/' + model) 
         new_predict = prediction(clf, df)
         img_pred = chart_prediction(new_predict)
         #encoding y definitions
