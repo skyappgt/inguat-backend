@@ -91,9 +91,9 @@ def predict():
         return resp
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file.save(os.path.join('/data/DWeb/inguat-backend/data/nueva', filename))
+        file.save(os.path.join('new/', filename))
         
-        urldata = 'data/nueva/'+ filename
+        urldata = 'new/'+ filename
         df = pd.read_csv(urldata, index_col=0)
         clf = joblib.load('model/' + model) 
         new_predict = prediction(clf, df)
@@ -140,7 +140,7 @@ def chart_prediction(X):
     img.seek(0)
     pngfig = base64.b64encode(img.getvalue()).decode('ascii')
     img_name = datetime.now().strftime("%Y-%m-%d-%H:%M")
-    with open("/data/DWeb/inguat-backend/charts/prediction/predict"+img_name+ ".png", "wb") as fh:
+    with open("charts/prediction/predict"+img_name+ ".png", "wb") as fh:
         fh.write(base64.decodebytes(pngfig.encode()))
     #pngfig.save(os.path.join('', img_name))
     return pngfig #render_template('plot.html', plot_url=pngfig)
@@ -401,7 +401,7 @@ class EncoderXY:
 #*********************MODELS+++++++++++++++++++++++++++++
 @app.route('/models', methods=['GET'])
 def models():
-    path = os.path.expanduser('/model')
+    path = os.path.expanduser('tmp/')
     resp = jsonify(make_tree_model(path))
     return resp
 
