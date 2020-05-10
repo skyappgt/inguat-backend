@@ -17,7 +17,7 @@ body {
   grid-template-columns: minmax(auto, 1024px);
   display: grid;
   justify-content: center;
-  margin: auto 35%;
+  margin: auto 33%;
 }
 .Header-content {
   display: flex;
